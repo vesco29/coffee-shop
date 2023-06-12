@@ -48,8 +48,8 @@ class TestingDBLoad(unittest.IsolatedAsyncioTestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         pass
-        #if database_exists(engine.url):
-        #    drop_database(engine.url)
+        if database_exists(engine.url):
+            drop_database(engine.url)
 
     def setUp(self) -> None:
         self.maxDiff = None

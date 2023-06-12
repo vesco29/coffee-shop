@@ -7,7 +7,7 @@ from fastapi.encoders import jsonable_encoder
 
 from sqlalchemy_utils import database_exists, create_database, drop_database
 
-from app.db import database, engine, metadata, User, Customer, Sales, Product
+from app.db import database, engine, metadata, Customer, Sales, Product
 from app.common import load_table, get_birthday_customer, last_order_per_customer, top_selling_products
 
 
@@ -17,8 +17,8 @@ HOME = os.path.abspath(os.path.dirname(__file__))
 app = FastAPI(title="Coffee shop - FastAPI and Docker")
 
 @app.get("/")
-async def read_root():
-    return await User.objects.all()
+def read_root():
+    return {"hello": "world"}
 
 
 @app.get("/customers/birthday")
@@ -53,9 +53,9 @@ async def startup():
         await database.connect()
     # create a dummy entry
     await load_table(Customer, csv_file=os.path.join(HOME,'..', 'dataset', 'customer.csv'))
-    await load_table(Sales, csv_file=os.path.join(HOME,'..', 'dataset', 'sales_reciepts.csv'))
     await load_table(Product, csv_file=os.path.join(HOME,'..', 'dataset', 'product.csv'))
-    await User.objects.get_or_create(email="test@test.com")
+    await load_table(Sales, csv_file=os.path.join(HOME,'..', 'dataset', 'sales_reciepts.csv'))
+    
 
 
 @app.on_event("shutdown")
