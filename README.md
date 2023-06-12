@@ -71,3 +71,29 @@ these customers using an email campaign.
 - Type Hinting
 - Logging
 ***
+## To run the service using Docker, follow these steps:
+
+1) Clone the repository to your local machine.  
+2) Open a terminal or command prompt and navigate to the cloned repository.  
+3) Run the following command to build and run the Docker containers:  
+```
+docker compose up --build
+```
+  This will build the Docker images and start the containers.  
+
+Once the service is running, you can access the following endpoints:
+
+- Documentation: [Docs](http://127.0.0.1:8008/docs)  
+This link will take you to the API documentation where you can explore the available endpoints and make test requests.
+
+- Endpoint 1: [Customers Birthday](http://127.0.0.1:8008/customers/birthday)  
+This link will retrieve the customers who have a birthday today.
+
+- Endpoint 2: [Top Selling Products](http://127.0.0.1:8008/products/top-selling-products/2019)    
+This link will retrieve the top-selling products for the year 2019.
+
+- Endpoint 3: [Last Order per Customer](http://127.0.0.1:8008/customers/last-order-per-customer)   
+This link will retrieve the last order per customer.
+
+Click on the provided links to access the respective endpoints and view the results.
+
