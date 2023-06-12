@@ -28,14 +28,46 @@ async def get_birthday_customer(table: object):
     return await table.objects.filter(birthday=f'{today.month}-{today.day}').values(['customer_id', 'customer_first_name']) 
 
 
-async def top_selling_products(year: int, sells: object):
-    return []
+async def top_selling_products(year: int, engine: object):
+    column_names = ("product_name", "total_sales")
+    sql_query  = '''SELECT p.product, SUM(sr.quantity) AS total_quantity
+                    FROM sales_reciepts sr
+                    JOIN product p ON sr.product_id = p.product_id
+                    WHERE EXTRACT(YEAR FROM sr.transaction_date) = 2019
+                    GROUP BY  p.product
+                    ORDER BY total_quantity DESC
+                    LIMIT 10;
+                        '''
+    selected = engine.execute(sql_query)
+    result = list()
+    for row in selected:
+        result.append({column_names[0]: row[0],
+                       column_names[1]: row[1]})
+    
+    selected.close()
+    return result
 
-async def last_order_per_customer(customer: object, sells: object):
-    return []
-    #today = datetime.date.today()
-    #return await table.objects.filter(birthday=f'{today.month}-{today.day}').values(['customer_id', 'customer_first_name']) 
-
+async def last_order_per_customer(engine: object):
+    column_names = ("customer_id", "customer_email", "last_order_date")
+    sql_query  = '''SELECT s.customer_id,c.customer_email, s.transaction_date
+                    FROM sales_reciepts s
+                    JOIN (
+                        SELECT customer_id, MAX(transaction_datetime) AS max_datetime
+                        FROM sales_reciepts
+                        GROUP BY customer_id
+                    ) t ON s.customer_id = t.customer_id AND s.transaction_datetime = t.max_datetime
+                    JOIN customers c ON s.customer_id = c.customer_id
+                    ORDER BY s.customer_id;
+                        '''
+    selected = engine.execute(sql_query)
+    result = list()
+    for row in selected:
+        result.append({column_names[0]: row[0],
+                       column_names[1]: row[1],
+                       column_names[2]: row[2]})
+    
+    selected.close()
+    return result
 
 async def load_table(table: object, csv_file: str):
     fields = table.__fields__.keys()

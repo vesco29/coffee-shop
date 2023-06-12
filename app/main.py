@@ -32,18 +32,18 @@ async def read_birthday():
 @app.get("/products/top-selling-products/{year}")
 async def read_last_order(year: int):
 
-    products = await top_selling_products(year, Sales)
-    last_order = {'products': products} 
-    content = jsonable_encoder({last_order})
+    products = await top_selling_products(year, engine)
+    customer_dict = {'products': products} 
+    content = jsonable_encoder(customer_dict)
     return JSONResponse(content=content)
 
 
 @app.get("/customers/last-order-per-customer")
 async def read_last_order():
 
-    customers = await last_order_per_customer(Customer, Sales)
-    last_order = {'last_order': customers } 
-    content = jsonable_encoder({last_order})
+    last_order = await last_order_per_customer(engine)
+    customers = {'customers': last_order } 
+    content = jsonable_encoder(customers)
     return JSONResponse(content=content)
 
 
